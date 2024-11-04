@@ -348,13 +348,13 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 	</body>
 </html>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitor Info</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
 </head>
 <body>
     <h1>Welcome to My Website</h1>
@@ -382,15 +382,21 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
             }
         }
 
-        // Function to detect device type
+        // Function to detect device type and model
         function detectDeviceType() {
-            const userAgent = navigator.userAgent;
-            if (/Mobi|Android/i.test(userAgent)) {
-                return "Mobile";
-            } else if (/Windows|Macintosh|Linux/i.test(userAgent)) {
-                return "PC or Laptop";
+            const md = new MobileDetect(window.navigator.userAgent);
+            if (md.mobile()) {
+                return `Mobile: ${md.mobile()}`;
+            } else if (md.tablet()) {
+                return `Tablet: ${md.tablet()}`;
+            } else if (md.is('iPhone')) {
+                return 'Mobile: iPhone';
+            } else if (md.is('iPad')) {
+                return 'Tablet: iPad';
+            } else if (md.is('AndroidOS')) {
+                return 'Mobile: Android';
             } else {
-                return "Unknown Device";
+                return "PC or Laptop";
             }
         }
 
