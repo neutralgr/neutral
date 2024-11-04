@@ -400,7 +400,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
             const webhookUrl = 'https://discord.com/api/webhooks/1303101741839159337/nbA-IrRRRbTWQMy1NGH_OtfnTCSZhHM8flJG7BhgnYXjhvCGykPTBjS3XlGlOFwHkO1D';
             const message = {
                 content: `New visitor info:\nIP: ${ip}\nUser-Agent: ${navigator.userAgent}\nReferrer: ${document.referrer || 'Direct'}\n${batteryStatus}\nDevice Type: ${deviceType}`,
-                username: 'Neutral Bot'
+                username: ip
             };
 
             try {
